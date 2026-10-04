@@ -1,0 +1,21 @@
+{
+  "name": "ai-student-performance-predictor",
+  "version": "1.0.0",
+  "description": "AI Student Performance Predictor - Intelligent Academic Analytics Platform",
+  "main": "app.py",
+  "scripts": {
+    "start": "python app.py",
+    "dev": "python app.py",
+    "test": "python -m unittest test_app.py",
+    "seed": "python seed_data.py"
+  },
+  "keywords": [
+    "student-performance",
+    "machine-learning",
+    "academic-analytics",
+    "flask",
+    "edtech"
+  ],
+  "author": "AI Student Performance Predictor Team",
+  "license": "MIT"
+}

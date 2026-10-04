@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Student Performance Predictor - Educational Intelligence</title>
+  
+  <!-- Standalone Relative Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ================= AUTHENTICATION / LOGIN PAGE (FIRST SCREEN) ================= -->
+  <div id="authContainer" class="auth-wrapper" style="display: block;">
+    <div class="card-3d holo-card" style="text-align: left; padding: 36px 32px; max-width: 480px; margin: 40px auto;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div class="brand-icon-3d" style="margin: 0 auto 14px auto; width: 52px; height: 52px; font-size: 1.6rem;">
+          🎓
+        </div>
+        <h2 style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px;">AI Student Performance Predictor</h2>
+        <p style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">Role-Based Predictive Academic Intelligence System</p>
+      </div>
+
+      <!-- Auth Tabs Toggle -->
+      <div style="display: flex; gap: 6px; margin-bottom: 20px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: var(--radius-md);">
+        <button type="button" id="tabBtnLogin" class="btn btn-primary" style="flex: 1; padding: 8px;" onclick="toggleAuthTab('login')">
+          🔒 Sign In
+        </button>
+        <button type="button" id="tabBtnRegister" class="btn btn-secondary" style="flex: 1; padding: 8px;" onclick="toggleAuthTab('register')">
+          👤 Register
+        </button>
+      </div>
+
+      <!-- Inline Error Message Box -->
+      <div id="loginErrorMessage" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.82rem; margin-bottom: 16px;">
+        Invalid email or password.
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="formLogin" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="e.g. admin@edu.ai" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 6px;">
+          🚀 Sign In to Dashboard
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="formRegister" onsubmit="handleRegisterSubmit(event)" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="regFullName" class="form-input" placeholder="e.g. Alex Rivera" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="regEmail" class="form-input" placeholder="e.g. alex.cs@edu.ai" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Account Role</label>
+          <select id="regRole" class="form-select" onchange="toggleRegStudentFields(this.value)">
+            <option value="student">Student</option>
+            <option value="faculty">Faculty / Teacher</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+
+        <div id="regStudentFields">
+          <div class="form-group">
+            <label class="form-label">Register Number</label>
+            <input type="text" id="regRegNo" class="form-input" placeholder="e.g. 2024CS999" />
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">Year</label>
+              <select id="regYear" class="form-select">
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3" selected>Year 3</option>
+                <option value="4">Year 4</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <select id="regSemester" class="form-select">
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+                <option value="5" selected>Sem 5</option>
+                <option value="6">Sem 6</option>
+                <option value="7">Sem 7</option>
+                <option value="8">Sem 8</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section</label>
+              <select id="regSection" class="form-select">
+                <option value="Section A">Sec A</option>
+                <option value="Section B">Sec B</option>
+                <option value="Section C">Sec C</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <select id="regDept" class="form-select">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Electronics & Communication">Electronics & Communication</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password (Min 6 chars)</label>
+          <input type="password" id="regPassword" class="form-input" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 6px;">
+          ✓ Create Account & Sign In
+        </button>
+      </form>
+
+      <!-- 1-Click Quick Demo Accounts -->
+      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
+        <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-bottom: 8px;">
+          ⚡ 1-Click Demo Accounts by Role:
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('admin@edu.ai', 'admin123')" style="justify-content: flex-start; text-align: left;">
+            👔 <strong>Admin:</strong> admin@edu.ai (All Students & Faculty Controls)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('faculty@edu.ai', 'faculty123')" style="justify-content: flex-start; text-align: left;">
+            👩‍🏫 <strong>Faculty (CS):</strong> faculty@edu.ai (Computer Science Scope)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('prof.it@edu.ai', 'faculty123')" style="justify-content: flex-start; text-align: left;">
+            👨‍🏫 <strong>Faculty (IT):</strong> prof.it@edu.ai (Information Tech Scope)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('student@edu.ai', 'student123')" style="justify-content: flex-start; text-align: left;">
+            👨‍🎓 <strong>Student (CS):</strong> student@edu.ai (Alex Rivera - CS Year 3)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('priya.it@edu.ai', 'student123')" style="justify-content: flex-start; text-align: left;">
+            👩‍🎓 <strong>Student (IT):</strong> priya.it@edu.ai (Priya Sharma - IT Year 2)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= MAIN APP DASHBOARD (DISPLAYED ONLY AFTER LOGIN) ================= -->
+  <div id="appMainContainer" class="app-container" style="display: none;">
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon-3d">
+          🎓
+        </div>
+        <div class="brand-text">
+          <h1>EduPredict AI</h1>
+          <span id="brandSubText">Academic Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Role-Based Navigation Menu -->
+      <ul class="nav-menu" id="dynamicNavMenu">
+        <!-- Rendered dynamically by App.renderNavMenu() -->
+      </ul>
+
+      <!-- User Widget with Active Session & Logout Button -->
+      <div class="user-widget">
+        <div class="user-card">
+          <div class="user-avatar" id="sidebarUserAvatar">A</div>
+          <div class="user-info">
+            <div class="user-name" id="sidebarUserName">Admin User</div>
+            <span id="sidebarUserRole" class="user-role-badge role-admin">admin</span>
+          </div>
+          <button class="btn-logout" title="Sign Out" onclick="App.logout()">
+            🚪
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+      
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <button id="sidebarToggle" class="btn btn-secondary btn-sm" style="display: none;">☰</button>
+          <div class="page-header">
+            <h2 id="topbarTitle">AI Student Performance Predictor</h2>
+            <p id="topbarSubtitle">Role-Based Academic Intelligence • 100% Persistent LocalStorage</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions" id="topbarActions">
+          <!-- Dynamic Action Buttons populated based on role -->
+        </div>
+      </header>
+
+      <!-- Content Views Container -->
+      <div class="content-body">
+
+        <!-- ===== VIEW: DYNAMIC ROLE DASHBOARD ===== -->
+        <section id="view-dashboard" class="view-section">
+          <!-- Populated by App.renderDashboard() according to Admin / Faculty / Student role -->
+          <div id="dashboardRoleContainer"></div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 1 (STUDENT DATA MANAGEMENT - ADMIN / FACULTY) ===== -->
+        <section id="view-students" class="view-section" style="display: none;">
+          <div id="studentsScopeBanner"></div>
+
+          <div class="card-3d">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 id="studentsViewTitle" style="font-size: 1.15rem; font-weight: 700;">Student Academic Directory</h3>
+                <p id="studentsViewSubtitle" style="font-size: 0.8rem; color: var(--text-muted);">Manage student profiles, attendance metrics, and semester subject marks.</p>
+              </div>
+              <div id="studentsViewActionContainer">
+                <button class="btn btn-primary" onclick="App.openAddStudentModal()">
+                  ➕ Register New Student
+                </button>
+              </div>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="search-filter-bar">
+              <div class="search-input-wrapper">
+                <input type="text" id="searchStudentInput" class="form-input" placeholder="Search by name, reg no, or email..." oninput="App.renderStudentsList()" />
+              </div>
+              <select id="filterDeptSelect" class="form-select" style="width: auto;" onchange="App.renderStudentsList()">
+                <option value="all">All Departments</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+              </select>
+              <select id="filterYearSelect" class="form-select" style="width: auto;" onchange="App.renderStudentsList()">
+                <option value="all">All Years</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
+              </select>
+              <select id="filterSemSelect" class="form-select" style="width: auto;" onchange="App.renderStudentsList()">
+                <option value="all">All Semesters</option>
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+                <option value="5">Sem 5</option>
+                <option value="6">Sem 6</option>
+                <option value="7">Sem 7</option>
+                <option value="8">Sem 8</option>
+              </select>
+            </div>
+
+            <!-- Students Data Table -->
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reg Number</th>
+                    <th>Student Info</th>
+                    <th>Department</th>
+                    <th>Class / Sec</th>
+                    <th>Attendance</th>
+                    <th>Avg Score</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: ADMIN FACULTY & CLASS ASSIGNMENT MANAGEMENT ===== -->
+        <section id="view-faculty-admin" class="view-section" style="display: none;">
+          <div class="card-3d" style="margin-bottom: 22px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700;">👩‍🏫 Faculty & Teacher Account Management</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Manage faculty credentials and assign student cohorts by department, class, and section.</p>
+              </div>
+              <button class="btn btn-primary" onclick="App.openAddFacultyModal()">
+                ➕ Add Faculty Member
+              </button>
+            </div>
+          </div>
+
+          <!-- Faculty Accounts Table -->
+          <div class="card-3d">
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Active Faculty & Assigned Student Cohorts</h4>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Faculty Name</th>
+                    <th>Email</th>
+                    <th>Base Dept</th>
+                    <th>Assigned Department</th>
+                    <th>Assigned Class/Year</th>
+                    <th>Assigned Section</th>
+                    <th>Assigned Students</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="facultyAdminTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: STUDENT COMMUNITY (SAFE PEER DIRECTORY) ===== -->
+        <section id="view-community" class="view-section" style="display: none;">
+          <div class="privacy-notice">
+            <span class="icon">🛡️</span>
+            <div>
+              <strong>Peer Privacy Guard Active:</strong> You are viewing the student community directory. Personal marks, attendance %, assignment scores, internal tests, GPA, and AI performance predictions of other students are confidential and hidden.
+            </div>
+          </div>
+
+          <!-- Filter / Search Peer Cards -->
+          <div class="card-3d" style="margin-bottom: 20px;">
+            <div class="search-filter-bar" style="margin-bottom: 0;">
+              <div class="search-input-wrapper">
+                <input type="text" id="communitySearchInput" class="form-input" placeholder="Search classmates by name or department..." oninput="App.renderCommunityList()" />
+              </div>
+              <select id="communityFilterDept" class="form-select" style="width: auto;" onchange="App.renderCommunityList()">
+                <option value="all">All Departments</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+              </select>
+              <select id="communityFilterYear" class="form-select" style="width: auto;" onchange="App.renderCommunityList()">
+                <option value="all">All Years</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Peer Cards Grid -->
+          <div class="grid-community" id="communityGridContainer">
+            <!-- Populated via JS -->
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 2 (AI PERFORMANCE PREDICTION) ===== -->
+        <section id="view-predict" class="view-section" style="display: none;">
+          <!-- Student Selector (Visible only to Admin / Faculty) -->
+          <div id="predictStudentSelectWrapper" class="card-3d" style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding: 14px 18px;">
+            <span style="font-weight: 600; font-size: 0.88rem;">Select Student:</span>
+            <select id="predictStudentSelect" class="form-select" style="flex: 1; max-width: 420px;" onchange="App.handlePredictSelectChange(this.value)"></select>
+          </div>
+
+          <div class="grid-prediction">
+            <!-- 3D Holographic Grade Card -->
+            <div class="card-3d holo-card">
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--accent-cyan); font-weight: 700; letter-spacing: 1px;">
+                🧠 AI Predicted Performance
+              </div>
+              <h3 id="predStudentTitle" style="font-size: 1.25rem; margin-top: 6px; font-weight: 800;">Alex Rivera (2024CS101)</h3>
+              <p id="predStudentMeta" style="font-size: 0.78rem; color: var(--text-muted);">Computer Science • Sem 5</p>
+
+              <!-- Dynamic Circular Score Gauge -->
+              <div class="score-circle-container">
+                <svg class="score-circle-svg" viewBox="0 0 160 160">
+                  <circle class="score-circle-bg" cx="80" cy="80" r="68"></circle>
+                  <circle id="predictionProgressCircle" class="score-circle-progress" cx="80" cy="80" r="68"></circle>
+                </svg>
+                <div class="score-value-text">
+                  <span id="predictionScoreValue" class="score-num">--%</span>
+                  <span class="score-label">Expected Score</span>
+                </div>
+              </div>
+
+              <!-- Classification & Risk Badges -->
+              <div style="display: flex; flex-direction: column; gap: 6px; align-items: center; margin-top: 6px;">
+                <span id="predTierBadge" class="badge badge-high-tier">High Performance</span>
+                <span id="predRiskBadge" class="badge badge-low-risk">Low Risk</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">92.5% Supervised Model Confidence</span>
+              </div>
+            </div>
+
+            <!-- Explainable Factors List -->
+            <div class="card-3d">
+              <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">
+                🔬 Explainable AI Factor Attribution
+              </h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
+                Positive and negative drivers calculated from attendance, assignments, and exams.
+              </p>
+              
+              <div id="predictionFactorsList" class="factor-list">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Class Cohort Matrix (Admin / Faculty only) -->
+          <div id="cohortPredictMatrixCard" class="card-3d" style="margin-top: 20px;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">Cohort Academic Risk Matrix</h3>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Overview of predicted performance across accessible students.</p>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reg No</th>
+                    <th>Student Name</th>
+                    <th>Dept</th>
+                    <th>Attendance</th>
+                    <th>Predicted %</th>
+                    <th>Risk Category</th>
+                    <th>Deep Dive</th>
+                  </tr>
+                </thead>
+                <tbody id="batchPredictTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: WHAT-IF SIMULATOR ===== -->
+        <section id="view-simulator" class="view-section" style="display: none;">
+          <div class="card-3d">
+            <div style="margin-bottom: 20px;">
+              <h3 style="font-size: 1.2rem; font-weight: 800;">
+                🎛️ Interactive What-If Performance Simulator
+              </h3>
+              <p style="font-size: 0.82rem; color: var(--text-muted);">
+                Move the sliders to see how adjusting attendance, assignment marks, and internal exam scores dynamically alters predicted outcomes and risk tiers.
+              </p>
+            </div>
+
+            <div class="grid-2col">
+              <!-- Sliders -->
+              <div>
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span>📅 Attendance Percentage</span>
+                    <strong id="simAttendanceVal" style="color: var(--accent-cyan);">80%</strong>
+                  </div>
+                  <input type="range" id="simAttendance" class="sim-slider" min="30" max="100" value="80" />
+                </div>
+
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span>📝 Assignment & Practical Marks</span>
+                    <strong id="simAssignmentVal" style="color: var(--accent-violet);">75%</strong>
+                  </div>
+                  <input type="range" id="simAssignment" class="sim-slider" min="0" max="100" value="75" />
+                </div>
+
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span>✍️ Mid-Term Internal Score</span>
+                    <strong id="simInternalsVal" style="color: var(--warning);">70%</strong>
+                  </div>
+                  <input type="range" id="simInternals" class="sim-slider" min="0" max="100" value="70" />
+                </div>
+
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span>📈 Previous Semester Baseline</span>
+                    <strong id="simPrevSemVal" style="color: var(--info);">70%</strong>
+                  </div>
+                  <input type="range" id="simPrevSem" class="sim-slider" min="0" max="100" value="70" />
+                </div>
+              </div>
+
+              <!-- Output Card -->
+              <div class="card-3d holo-card" style="text-align: left; padding: 22px;">
+                <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--accent-cyan); font-weight: 700;">
+                  Live Simulation Result
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 12px; margin: 12px 0;">
+                  <span id="simPredictedScore" style="font-size: 2.8rem; font-weight: 800; color: #fff;">--%</span>
+                  <span style="color: var(--text-muted); font-size: 0.85rem;">Simulated Outcome</span>
+                </div>
+
+                <div style="display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;">
+                  <span id="simTierBadge" class="badge badge-medium-tier">Medium Performance</span>
+                  <span id="simRiskBadge" class="badge badge-moderate-risk">Moderate Risk</span>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+                  <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-bottom: 6px;">
+                    Simulated Factor Impacts:
+                  </div>
+                  <div id="simFactorsPreview"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 3 (AI SUGGESTIONS) ===== -->
+        <section id="view-suggestions" class="view-section" style="display: none;">
+          <!-- Student Selector (Visible only to Admin / Faculty) -->
+          <div id="sugStudentSelectWrapper" class="card-3d" style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding: 14px 18px;">
+            <span style="font-weight: 600; font-size: 0.88rem;">Select Student:</span>
+            <select id="sugStudentSelect" class="form-select" style="flex: 1; max-width: 420px;" onchange="App.handleSuggestionsSelectChange(this.value)"></select>
+          </div>
+
+          <!-- Top Summary Card -->
+          <div class="card-3d" style="margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+              <div>
+                <span class="badge badge-low-risk" style="margin-bottom: 4px;">✨ AI Recommendation Engine</span>
+                <h3 id="sugStudentTitle" style="font-size: 1.25rem; font-weight: 800;">Alex Rivera (2024CS101)</h3>
+                <p id="sugStudentMeta" style="font-size: 0.8rem; color: var(--text-muted);">Computer Science • Sem 5</p>
+              </div>
+
+              <div style="display: flex; gap: 14px; align-items: center;">
+                <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 8px 14px; border-radius: var(--radius-md);">
+                  <div style="font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase;">Current Score</div>
+                  <div id="sugCurrentScore" style="font-size: 1.35rem; font-weight: 800; color: #fff;">--%</div>
+                </div>
+                <div style="font-size: 1.2rem; color: var(--accent-cyan);">➔</div>
+                <div style="text-align: center; background: rgba(16, 185, 129, 0.1); padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.3);">
+                  <div style="font-size: 0.68rem; color: #34d399; text-transform: uppercase;">Potential Target</div>
+                  <div id="sugTargetScore" style="font-size: 1.35rem; font-weight: 800; color: #34d399;">--%</div>
+                </div>
+                <span id="sugPotentialGain" class="badge badge-high-tier" style="font-size: 0.85rem;">+0.0% Gain</span>
+              </div>
+            </div>
+
+            <!-- Priority Counter Badges -->
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+              <span class="badge badge-critical-risk">⚠️ <strong id="sugCriticalCount">0</strong> Critical Priority</span>
+              <span class="badge badge-high-risk">❗ <strong id="sugHighCount">0</strong> High Priority</span>
+              <span class="badge badge-moderate-risk">ℹ️ <strong id="sugMediumCount">0</strong> Medium Priority</span>
+            </div>
+          </div>
+
+          <!-- Attendance Recovery Box -->
+          <div id="sugAttendanceRecoveryBox"></div>
+
+          <!-- Weak Subjects Remediation Cards -->
+          <div class="card-3d">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">📚 Subject-Wise Weakness Remediation Plans</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Targeted weekly study hours and focus topics for lower scoring subjects.</p>
+            <div id="sugWeakSubjectsList"></div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 4 (REPORTS & ANALYTICS) ===== -->
+        <section id="view-reports" class="view-section" style="display: none;">
+          <!-- Top KPI Metrics -->
+          <div class="grid-stats">
+            <div class="card-3d stat-card">
+              <div class="stat-icon primary">👥</div>
+              <div>
+                <div class="stat-value" id="repTotalStudents">--</div>
+                <div class="stat-label">Accessible Cohort</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon cyan">📈</div>
+              <div>
+                <div class="stat-value" id="repAvgScore">--%</div>
+                <div class="stat-label">Avg Expected Score</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon success">🎯</div>
+              <div>
+                <div class="stat-value" id="repPassRate">--%</div>
+                <div class="stat-label">Pass Rate Forecast</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon warning">📅</div>
+              <div>
+                <div class="stat-value" id="repAvgAttendance">--%</div>
+                <div class="stat-label">Avg Attendance</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon danger">⚠️</div>
+              <div>
+                <div class="stat-value" id="repCriticalCount">0</div>
+                <div class="stat-label">Critical Risk Cases</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Download Action Bar -->
+          <div class="card-3d" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h3 id="reportsHeading" style="font-size: 1.05rem; font-weight: 700;">Performance & Risk Roster</h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">Generate official printable transcripts or export structured CSV dataset.</p>
+            </div>
+            <button class="btn btn-primary" onclick="App.exportCSV()">
+              📥 Download CSV Report
+            </button>
+          </div>
+
+          <!-- Table -->
+          <div class="card-3d">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reg Number</th>
+                    <th>Student Name</th>
+                    <th>Department</th>
+                    <th>Class / Sec</th>
+                    <th>Attendance</th>
+                    <th>Internals</th>
+                    <th>Predicted %</th>
+                    <th>Risk Category</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="reportRosterTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal: Add Student (Admin Only) -->
+  <div id="addStudentModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">➕ Register New Student</h3>
+        <button class="btn-close-modal" onclick="App.closeModal('addStudentModal')">✕</button>
+      </div>
+      <form id="formAddStudent" onsubmit="App.handleAddStudentSubmit(event)">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label">Register Number *</label>
+              <input type="text" id="newRegNo" class="form-input" placeholder="e.g. 2024CS501" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="newFullName" class="form-input" placeholder="e.g. Emily Zhang" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" id="newEmail" class="form-input" placeholder="e.g. emily.cs@edu.ai" required />
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select id="newDept" class="form-select">
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year</label>
+              <select id="newYear" class="form-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <select id="newSem" class="form-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5" selected>5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section</label>
+              <select id="newSection" class="form-select">
+                <option value="Section A">Sec A</option>
+                <option value="Section B">Sec B</option>
+                <option value="Section C">Sec C</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label">Contact Number</label>
+              <input type="text" id="newPhone" class="form-input" placeholder="+1 (555) 000-0000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Avatar Emoji</label>
+              <select id="newAvatar" class="form-select">
+                <option value="👨‍🎓">👨‍🎓 Student</option>
+                <option value="👩‍🎓">👩‍🎓 Scholar</option>
+                <option value="🧑‍💻">🧑‍💻 Developer</option>
+                <option value="👩‍🔬">👩‍🔬 Scientist</option>
+                <option value="🧑‍🔧">🧑‍🔧 Engineer</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('addStudentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal: Add Faculty Member (Admin Only) -->
+  <div id="addFacultyModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">➕ Register Faculty Member</h3>
+        <button class="btn-close-modal" onclick="App.closeModal('addFacultyModal')">✕</button>
+      </div>
+      <form id="formAddFaculty" onsubmit="App.handleAddFacultySubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Faculty Full Name *</label>
+            <input type="text" id="newFacultyName" class="form-input" placeholder="e.g. Prof. David Miller" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" id="newFacultyEmail" class="form-input" placeholder="e.g. david.miller@edu.ai" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Base Department *</label>
+            <select id="newFacultyDept" class="form-select">
+              <option value="Computer Science">Computer Science</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Electronics & Communication">Electronics & Communication</option>
+            </select>
+          </div>
+          <div style="border-top: 1px solid var(--border-subtle); padding-top: 12px; margin-top: 12px;">
+            <div style="font-size: 0.78rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 8px;">
+              🎯 Initial Class Cohort Assignment:
+            </div>
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label class="form-label">Assigned Department</label>
+                <select id="newFacultyAssignDept" class="form-select">
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Electronics & Communication">Electronics & Communication</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Assigned Year</label>
+                <select id="newFacultyAssignYear" class="form-select">
+                  <option value="All Years">All Years</option>
+                  <option value="Year 1">Year 1</option>
+                  <option value="Year 2">Year 2</option>
+                  <option value="Year 3">Year 3</option>
+                  <option value="Year 4">Year 4</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Assigned Section</label>
+                <select id="newFacultyAssignSec" class="form-select">
+                  <option value="All Sections">All</option>
+                  <option value="Section A">Sec A</option>
+                  <option value="Section B">Sec B</option>
+                  <option value="Section C">Sec C</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Initial Password *</label>
+            <input type="password" id="newFacultyPassword" class="form-input" placeholder="••••••••" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('addFacultyModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Faculty Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal: Assign Faculty Class / Department (Admin Only) -->
+  <div id="assignFacultyModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">⚙️ Assign Faculty Student Scope</h3>
+        <button class="btn-close-modal" onclick="App.closeModal('assignFacultyModal')">✕</button>
+      </div>
+      <form id="formAssignFaculty" onsubmit="App.handleAssignFacultySubmit(event)">
+        <input type="hidden" id="assignFacultyEmail" />
+        <div class="modal-body">
+          <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: var(--radius-md); margin-bottom: 14px;">
+            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Faculty Member</div>
+            <div id="assignFacultyNameDisplay" style="font-weight: 700; color: #fff; font-size: 1rem;">Prof Name</div>
+            <div id="assignFacultyEmailDisplay" style="font-size: 0.8rem; color: var(--text-muted);">email@edu.ai</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Assigned Department *</label>
+            <select id="assignDeptSelect" class="form-select">
+              <option value="Computer Science">Computer Science</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Electronics & Communication">Electronics & Communication</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label">Assigned Year / Class</label>
+              <select id="assignYearSelect" class="form-select">
+                <option value="All Years">All Years (1 - 4)</option>
+                <option value="Year 1">Year 1</option>
+                <option value="Year 2">Year 2</option>
+                <option value="Year 3">Year 3</option>
+                <option value="Year 4">Year 4</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assigned Section</label>
+              <select id="assignSectionSelect" class="form-select">
+                <option value="All Sections">All Sections (A, B, C)</option>
+                <option value="Section A">Section A</option>
+                <option value="Section B">Section B</option>
+                <option value="Section C">Section C</option>
+              </select>
+            </div>
+          </div>
+          <p style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">
+            The faculty member will only be able to view, grade, and evaluate students matching this assigned scope.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('assignFacultyModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Assignment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal: Student Full Profile -->
+  <div id="studentProfileModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">👨‍🎓 Student Academic Profile</h3>
+        <button class="btn-close-modal" onclick="App.closeModal('studentProfileModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: var(--radius-md);">
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Register Number</div>
+            <div id="profileRegNo" style="font-size: 1.05rem; font-weight: 700; color: #fff;">--</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-top: 6px;">Full Name</div>
+            <div id="profileFullName" style="font-size: 0.95rem; font-weight: 600;">--</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-top: 6px;">Email Address</div>
+            <div id="profileEmail" style="font-size: 0.82rem; color: var(--text-muted);">--</div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Department</div>
+            <div id="profileDept" style="font-size: 0.95rem; font-weight: 600;">--</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-top: 6px;">Class Standing & Section</div>
+            <div id="profileYearSem" style="font-size: 0.85rem; color: var(--accent-cyan);">--</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-top: 6px;">Phone Number</div>
+            <div id="profilePhone" style="font-size: 0.82rem; color: var(--text-muted);">--</div>
+          </div>
+        </div>
+
+        <h4 style="font-size: 0.92rem; font-weight: 700; margin-bottom: 10px;">Semester Records Log</h4>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sem</th>
+                <th>Attendance</th>
+                <th>Assignment</th>
+                <th>Internals</th>
+                <th>Prior GPA</th>
+                <th>Semester Avg</th>
+              </tr>
+            </thead>
+            <tbody id="profileRecordsBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnProfilePredict" class="btn btn-cyan">🧠 Generate AI Prediction</button>
+        <button type="button" class="btn btn-secondary" onclick="App.closeModal('studentProfileModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal: Academic Record CRUD (Admin & Faculty) -->
+  <div id="academicRecordModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.1rem; font-weight: 700;">📖 Academic Record & Marks Entry</h3>
+          <div id="recModalStudentName" style="font-size: 0.78rem; color: var(--text-muted);">Student Name</div>
+        </div>
+        <button class="btn-close-modal" onclick="App.closeModal('academicRecordModal')">✕</button>
+      </div>
+
+      <form id="formAcademicRecord" onsubmit="App.handleSaveAcademicRecord(event)">
+        <input type="hidden" id="recStudentId" />
+
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <select id="recSemester" class="form-select">
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+                <option value="5" selected>Sem 5</option>
+                <option value="6">Sem 6</option>
+                <option value="7">Sem 7</option>
+                <option value="8">Sem 8</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Attendance %</label>
+              <input type="number" id="recAttendance" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assignment %</label>
+              <input type="number" id="recAssignment" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Internals %</label>
+              <input type="number" id="recInternals" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label">Previous Semester Score %</label>
+              <input type="number" id="recPrevSem" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Instructor Notes</label>
+              <input type="text" id="recNotes" class="form-input" placeholder="e.g. Strong in lab exams" />
+            </div>
+          </div>
+
+          <!-- Dynamic Subject Marks -->
+          <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <label class="form-label" style="margin-bottom: 0;">Subject-Wise Marks Breakdown</label>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="App.addSubjectRow()">
+                ➕ Add Subject
+              </button>
+            </div>
+            <div id="subjectMarksList"></div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('academicRecordModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Academic Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal: Official Printable Transcript -->
+  <div id="transcriptReportModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 780px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.1rem; font-weight: 700;">📑 Official Student Academic Transcript</h3>
+        <button class="btn-close-modal" onclick="App.closeModal('transcriptReportModal')">✕</button>
+      </div>
+
+      <div class="modal-body" id="printableTranscriptArea">
+        <div style="text-align: center; border-bottom: 2px solid var(--border-subtle); padding-bottom: 14px; margin-bottom: 18px;">
+          <h2 style="font-size: 1.25rem; font-weight: 800; color: #fff;">AI INSTITUTE OF TECHNOLOGY & ENGINEERING</h2>
+          <div style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: 600; text-transform: uppercase;">
+            Academic Performance & AI Intelligence Transcript
+          </div>
+        </div>
+
+        <!-- Student Meta -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: var(--radius-md); margin-bottom: 16px;">
+          <div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Student Name</div>
+            <div id="transStudentName" style="font-weight: 700; color: #fff;">--</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-top: 4px;">Register Number</div>
+            <div id="transRegNo" style="font-weight: 600;">--</div>
+          </div>
+          <div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Department</div>
+            <div id="transDept" style="font-weight: 600;">--</div>
+            <div id="transYearSem" style="font-size: 0.82rem; color: var(--accent-cyan);">--</div>
+            <div id="transEmail" style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">--</div>
+          </div>
+        </div>
+
+        <!-- AI Forecast Cards -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px;">
+          <div style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); padding: 8px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Predicted Score</div>
+            <div id="transPredScore" style="font-size: 1.2rem; font-weight: 800; color: #fff;">--%</div>
+          </div>
+          <div style="background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); padding: 8px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Performance Tier</div>
+            <div id="transPredTier" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan); margin-top: 2px;">--</div>
+          </div>
+          <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 8px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Risk Category</div>
+            <div id="transRiskLevel" style="font-size: 0.8rem; font-weight: 700; color: var(--warning); margin-top: 2px;">--</div>
+          </div>
+          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); padding: 8px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Reliability</div>
+            <div id="transConfidence" style="font-size: 0.8rem; font-weight: 700; color: #34d399; margin-top: 2px;">--</div>
+          </div>
+        </div>
+
+        <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 6px;">Semester History Summary</h4>
+        <div class="table-container" style="margin-bottom: 16px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Semester</th>
+                <th>Attendance %</th>
+                <th>Assignment %</th>
+                <th>Internals %</th>
+                <th>Prior GPA %</th>
+                <th>Calculated Avg</th>
+              </tr>
+            </thead>
+            <tbody id="transRecordsTableBody"></tbody>
+          </table>
+        </div>
+
+        <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 6px;">Personalized Study Recommendations</h4>
+        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: var(--radius-md); border-left: 3px solid var(--primary);">
+          <ul id="transSuggestionsList" style="padding-left: 18px; font-size: 0.8rem; color: var(--text-muted);"></ul>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="App.closeModal('transcriptReportModal')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="App.printTranscript()">🖨️ Print / Save as PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Standalone Relative App Script -->
+  <script src="js/app.js"></script>
+
+  <script>
+    function toggleAuthTab(tab) {
+      const errBox = document.getElementById('loginErrorMessage');
+      if (errBox) errBox.style.display = 'none';
+
+      if (tab === 'login') {
+        document.getElementById('formLogin').style.display = 'block';
+        document.getElementById('formRegister').style.display = 'none';
+        document.getElementById('tabBtnLogin').className = 'btn btn-primary';
+        document.getElementById('tabBtnRegister').className = 'btn btn-secondary';
+      } else {
+        document.getElementById('formLogin').style.display = 'none';
+        document.getElementById('formRegister').style.display = 'block';
+        document.getElementById('tabBtnLogin').className = 'btn btn-secondary';
+        document.getElementById('tabBtnRegister').className = 'btn btn-primary';
+      }
+    }
+
+    function toggleRegStudentFields(role) {
+      document.getElementById('regStudentFields').style.display = (role === 'student') ? 'block' : 'none';
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPassword').value;
+      App.login(email, pass);
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const payload = {
+        full_name: document.getElementById('regFullName').value.trim(),
+        email: document.getElementById('regEmail').value.trim(),
+        role: document.getElementById('regRole').value,
+        register_number: document.getElementById('regRegNo')?.value?.trim().toUpperCase(),
+        year: document.getElementById('regYear')?.value,
+        semester: document.getElementById('regSemester')?.value,
+        section: document.getElementById('regSection')?.value || 'Section A',
+        department: document.getElementById('regDept').value,
+        password: document.getElementById('regPassword').value.trim()
+      };
+      App.register(payload);
+    }
+  </script>
+</body>
+</html>

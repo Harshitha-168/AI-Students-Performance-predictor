@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app_name }} - Intelligent Academic Analytics</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- Custom 3D Dashboard Styles -->
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+
+  <!-- ================= AUTHENTICATION VIEW ================= -->
+  <div id="authContainer" class="auth-wrapper" style="display: none;">
+    <div class="card-3d holo-card" style="text-align: left; padding: 36px 32px;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div class="brand-icon-3d" style="margin: 0 auto 16px auto; width: 56px; height: 56px; font-size: 1.8rem;">
+          <i class="fas fa-brain"></i>
+        </div>
+        <h2 style="font-size: 1.45rem; font-weight: 800;">AI Student Performance Predictor</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Predictive Academic Intelligence Platform</p>
+      </div>
+
+      <!-- Auth Tabs Toggle -->
+      <div style="display: flex; gap: 8px; margin-bottom: 20px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: var(--radius-md);">
+        <button type="button" id="tabBtnLogin" class="btn btn-primary" style="flex: 1; padding: 8px;" onclick="toggleAuthTab('login')">
+          <i class="fas fa-lock"></i> Sign In
+        </button>
+        <button type="button" id="tabBtnRegister" class="btn btn-secondary" style="flex: 1; padding: 8px;" onclick="toggleAuthTab('register')">
+          <i class="fas fa-user-plus"></i> Register
+        </button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="formLogin" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="e.g. faculty@edu.ai" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-key"></i> Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">
+          <i class="fas fa-arrow-right-to-bracket"></i> Sign In to Dashboard
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="formRegister" onsubmit="handleRegisterSubmit(event)" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="regFullName" class="form-input" placeholder="e.g. Alex Rivera" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="regEmail" class="form-input" placeholder="e.g. alex.cs@edu.ai" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Account Role</label>
+          <select id="regRole" class="form-select" onchange="toggleRegStudentFields(this.value)">
+            <option value="student">Student</option>
+            <option value="faculty">Faculty / Admin</option>
+          </select>
+        </div>
+        <div id="regStudentFields">
+          <div class="form-group">
+            <label class="form-label">Register Number</label>
+            <input type="text" id="regRegNo" class="form-input" placeholder="e.g. 2024CS999" />
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label">Year</label>
+              <select id="regYear" class="form-select">
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3" selected>Year 3</option>
+                <option value="4">Year 4</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <select id="regSemester" class="form-select">
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+                <option value="5" selected>Sem 5</option>
+                <option value="6">Sem 6</option>
+                <option value="7">Sem 7</option>
+                <option value="8">Sem 8</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <select id="regDept" class="form-select">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Electronics & Communication">Electronics & Communication</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password (Min 6 chars)</label>
+          <input type="password" id="regPassword" class="form-input" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">
+          <i class="fas fa-user-check"></i> Create Account
+        </button>
+      </form>
+
+      <!-- 1-Click Quick Demo Switcher -->
+      <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-subtle);">
+        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-bottom: 10px;">
+          <i class="fas fa-bolt"></i> 1-Click Quick Demo Logins:
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('faculty@edu.ai', 'admin123')" style="justify-content: flex-start;">
+            <i class="fas fa-user-tie" style="color: var(--accent-cyan);"></i> Faculty Dean (Admin View)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('alex.cs@edu.ai', 'student123')" style="justify-content: flex-start;">
+            <i class="fas fa-graduation-cap" style="color: var(--success);"></i> Alex Rivera (High Performer - 91%)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('priya.it@edu.ai', 'student123')" style="justify-content: flex-start;">
+            <i class="fas fa-graduation-cap" style="color: var(--warning);"></i> Priya Sharma (Medium Performer - 68%)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="App.login('sara.ec@edu.ai', 'student123')" style="justify-content: flex-start;">
+            <i class="fas fa-graduation-cap" style="color: var(--danger);"></i> Sara Jenkins (Critical Risk - 39%)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= MAIN APP DASHBOARD ================= -->
+  <div id="appMainContainer" class="app-container" style="display: none;">
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon-3d">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div class="brand-text">
+          <h1>EduPredict AI</h1>
+          <span>Academic Intelligence</span>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-section-title">Core Modules</li>
+        <li>
+          <a href="#" class="nav-item active" data-tab="dashboard">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item" data-tab="students">
+            <i class="fas fa-user-graduate"></i>
+            <span>Student Management</span>
+            <span class="nav-badge live">Mod 1</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item" data-tab="predict">
+            <i class="fas fa-microchip"></i>
+            <span>AI Predictor</span>
+            <span class="nav-badge live">Mod 2</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item" data-tab="simulator">
+            <i class="fas fa-sliders"></i>
+            <span>What-If Simulator</span>
+            <span class="nav-badge live">AI Lab</span>
+          </a>
+        </li>
+
+        <li class="nav-section-title">Analytics & Action</li>
+        <li>
+          <a href="#" class="nav-item" data-tab="suggestions">
+            <i class="fas fa-lightbulb"></i>
+            <span>AI Suggestions</span>
+            <span class="nav-badge live">Mod 3</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-item" data-tab="reports">
+            <i class="fas fa-file-invoice"></i>
+            <span>Reports & Analytics</span>
+            <span class="nav-badge live">Mod 4</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- User Widget -->
+      <div class="user-widget">
+        <div class="user-card">
+          <div class="user-avatar" id="sidebarUserAvatar">A</div>
+          <div class="user-info">
+            <div class="user-name" id="sidebarUserName">Alex Rivera</div>
+            <span id="sidebarUserRole" class="user-role-badge role-student">student</span>
+          </div>
+          <button class="btn-logout" title="Sign Out" onclick="App.logout()">
+            <i class="fas fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <main class="main-wrapper">
+      
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="sidebarToggle" class="btn btn-secondary btn-sm" style="display: none;">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="page-header">
+            <h2>AI Student Performance Predictor</h2>
+            <p>Empowering Students & Faculty with Real-time Predictive Insights</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn btn-cyan btn-sm" onclick="App.switchTab('simulator')">
+            <i class="fas fa-flask"></i> Launch Simulator
+          </button>
+          <button class="btn btn-primary btn-sm admin-only" onclick="Module1.openAddStudentModal()">
+            <i class="fas fa-plus"></i> New Student
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Views Container -->
+      <div class="content-body">
+
+        <!-- ===== VIEW: DASHBOARD ===== -->
+        <section id="view-dashboard" class="view-section">
+          <!-- Overview Stats -->
+          <div class="grid-stats">
+            <div class="card-3d stat-card">
+              <div class="stat-icon primary"><i class="fas fa-users"></i></div>
+              <div>
+                <div class="stat-value" id="statTotalStudents">--</div>
+                <div class="stat-label">Enrolled Students</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon cyan"><i class="fas fa-book-bookmark"></i></div>
+              <div>
+                <div class="stat-value" id="statTotalRecords">--</div>
+                <div class="stat-label">Academic Records</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon success"><i class="fas fa-calendar-check"></i></div>
+              <div>
+                <div class="stat-value" id="statAvgAttendance">--%</div>
+                <div class="stat-label">Avg Attendance Rate</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon warning"><i class="fas fa-award"></i></div>
+              <div>
+                <div class="stat-value" id="statAvgScore">--%</div>
+                <div class="stat-label">Cohort Mean Score</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts & Overview Rows -->
+          <div class="grid-2col">
+            <div class="card-3d">
+              <h3 style="font-size: 1.05rem; margin-bottom: 14px; font-weight: 700;">
+                <i class="fas fa-sitemap" style="color: var(--primary);"></i> Department Distribution
+              </h3>
+              <div style="height: 240px; position: relative;">
+                <canvas id="chartDepartmentDistribution"></canvas>
+              </div>
+            </div>
+
+            <div class="card-3d">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 1.05rem; font-weight: 700;">
+                  <i class="fas fa-bolt" style="color: var(--accent-cyan);"></i> Quick Student Roster
+                </h3>
+                <button class="btn btn-secondary btn-sm" onclick="App.switchTab('students')">View All</button>
+              </div>
+              <div class="table-container" style="max-height: 240px;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Reg No</th>
+                      <th>Name</th>
+                      <th>Dept</th>
+                      <th>Year/Sem</th>
+                      <th>Attendance</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardStudentsTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 1 (STUDENT DATA MANAGEMENT) ===== -->
+        <section id="view-students" class="view-section" style="display: none;">
+          <div class="card-3d">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 style="font-size: 1.2rem; font-weight: 700;">Student Academic Directory</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Manage student profiles, attendance metrics, and semester subject marks.</p>
+              </div>
+              <div class="admin-only">
+                <button class="btn btn-primary" onclick="Module1.openAddStudentModal()">
+                  <i class="fas fa-user-plus"></i> Register New Student
+                </button>
+              </div>
+            </div>
+
+            <!-- Search & Filter Controls -->
+            <div class="search-filter-bar">
+              <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchStudentInput" class="form-input" placeholder="Search by name, reg no, or email..." oninput="Module1.loadStudentsList()" />
+              </div>
+              <select id="filterDeptSelect" class="form-select" style="width: auto; min-width: 180px;" onchange="Module1.loadStudentsList()">
+                <option value="all">All Departments</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+              </select>
+              <select id="filterYearSelect" class="form-select" style="width: auto;" onchange="Module1.loadStudentsList()">
+                <option value="all">All Years</option>
+                <option value="1">Year 1</option>
+                <option value="2">Year 2</option>
+                <option value="3">Year 3</option>
+                <option value="4">Year 4</option>
+              </select>
+              <select id="filterSemSelect" class="form-select" style="width: auto;" onchange="Module1.loadStudentsList()">
+                <option value="all">All Semesters</option>
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+                <option value="5">Sem 5</option>
+                <option value="6">Sem 6</option>
+                <option value="7">Sem 7</option>
+                <option value="8">Sem 8</option>
+              </select>
+            </div>
+
+            <!-- Main Students Data Table -->
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reg Number</th>
+                    <th>Student Info</th>
+                    <th>Department</th>
+                    <th>Class Level</th>
+                    <th>Attendance</th>
+                    <th>Avg Score</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 2 (AI PERFORMANCE PREDICTION) ===== -->
+        <section id="view-predict" class="view-section" style="display: none; position: relative;">
+          <!-- Loading Overlay -->
+          <div id="predictLoadingOverlay" style="display: none; position: absolute; inset: 0; background: rgba(10, 14, 26, 0.7); backdrop-filter: blur(6px); z-index: 50; align-items: center; justify-content: center; border-radius: var(--radius-lg);">
+            <div style="text-align: center;">
+              <i class="fas fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--primary);"></i>
+              <div style="margin-top: 12px; font-weight: 600;">Running AI Performance Engine...</div>
+            </div>
+          </div>
+
+          <div class="grid-prediction">
+            <!-- 3D Holographic Grade Card -->
+            <div class="card-3d holo-card">
+              <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent-cyan); font-weight: 700; letter-spacing: 1px;">
+                <i class="fas fa-brain"></i> AI Predicted Performance
+              </div>
+              <h3 id="predStudentTitle" style="font-size: 1.25rem; margin-top: 6px; font-weight: 800;">Alex Rivera (2024CS101)</h3>
+              <p id="predStudentMeta" style="font-size: 0.8rem; color: var(--text-muted);">Computer Science • Sem 5</p>
+
+              <!-- Dynamic 3D Progress Circle -->
+              <div class="score-circle-container">
+                <svg class="score-circle-svg" viewBox="0 0 160 160">
+                  <circle class="score-circle-bg" cx="80" cy="80" r="68"></circle>
+                  <circle id="predictionProgressCircle" class="score-circle-progress" cx="80" cy="80" r="68"></circle>
+                </svg>
+                <div class="score-value-text">
+                  <span id="predictionScoreValue" class="score-num">--%</span>
+                  <span class="score-label">Expected Score</span>
+                </div>
+              </div>
+
+              <!-- Classification and Risk Badges -->
+              <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; margin-top: 8px;">
+                <span id="predTierBadge" class="badge badge-high-tier">High Performance</span>
+                <span id="predRiskBadge" class="badge badge-low-risk">Low Risk</span>
+                <span id="predConfidenceText" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">92% Confidence</span>
+              </div>
+            </div>
+
+            <!-- Explainable Factors & Breakdown -->
+            <div class="card-3d">
+              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 4px;">
+                <i class="fas fa-diagram-project" style="color: var(--primary);"></i> Explainable AI Key Factor Attribution
+              </h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
+                Signals and weighting drivers that produced this predictive score.
+              </p>
+              
+              <div id="predictionFactorsList" class="factor-list">
+                <!-- Factor items populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Metrics Radar & Subject Analysis -->
+          <div class="grid-2col">
+            <div class="card-3d">
+              <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;">
+                <i class="fas fa-chart-radar" style="color: var(--accent-violet);"></i> Multi-Factor Academic Radar
+              </h4>
+              <div style="height: 250px; position: relative;">
+                <canvas id="chartPredictionRadar"></canvas>
+              </div>
+            </div>
+
+            <div class="card-3d">
+              <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;">
+                <i class="fas fa-chart-simple" style="color: var(--accent-cyan);"></i> Subject-Wise Marks Distribution
+              </h4>
+              <div style="height: 250px; position: relative;">
+                <canvas id="chartSubjectMarksBar"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Faculty Cohort Batch Matrix (Admin/Faculty View) -->
+          <div class="card-3d admin-only" style="margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h3 style="font-size: 1.1rem; font-weight: 700;">Cohort Academic Risk Matrix</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Class-wide predictive risk scan for early academic intervention.</p>
+              </div>
+              <div style="width: 140px; height: 100px;">
+                <canvas id="chartCohortSummary"></canvas>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reg No</th>
+                    <th>Student Name</th>
+                    <th>Dept</th>
+                    <th>Attendance</th>
+                    <th>Predicted %</th>
+                    <th>Risk Category</th>
+                    <th>Deep Analysis</th>
+                  </tr>
+                </thead>
+                <tbody id="batchPredictTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: WHAT-IF SIMULATOR ===== -->
+        <section id="view-simulator" class="view-section" style="display: none;">
+          <div class="card-3d">
+            <div style="margin-bottom: 24px;">
+              <h3 style="font-size: 1.25rem; font-weight: 800;">
+                <i class="fas fa-sliders" style="color: var(--accent-cyan);"></i> Interactive What-If Performance Simulator
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Test hypothetical academic scenarios in real time. Adjust sliders to see how improving attendance, assignment consistency, or internal marks dynamically shifts expected outcomes and risk categories.
+              </p>
+            </div>
+
+            <div class="grid-2col">
+              <!-- Sliders Column -->
+              <div>
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span><i class="fas fa-calendar-check" style="color: var(--primary);"></i> Attendance Percentage</span>
+                    <strong id="simAttendanceVal" style="color: var(--accent-cyan);">80%</strong>
+                  </div>
+                  <input type="range" id="simAttendance" class="sim-slider" min="30" max="100" value="80" />
+                </div>
+
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span><i class="fas fa-file-pen" style="color: var(--accent-violet);"></i> Assignment & Practical Score</span>
+                    <strong id="simAssignmentVal" style="color: var(--accent-violet);">75%</strong>
+                  </div>
+                  <input type="range" id="simAssignment" class="sim-slider" min="0" max="100" value="75" />
+                </div>
+
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span><i class="fas fa-pen-ruler" style="color: var(--warning);"></i> Mid-Term Internal Score</span>
+                    <strong id="simInternalsVal" style="color: var(--warning);">70%</strong>
+                  </div>
+                  <input type="range" id="simInternals" class="sim-slider" min="0" max="100" value="70" />
+                </div>
+
+                <div class="sim-slider-container">
+                  <div class="sim-slider-header">
+                    <span><i class="fas fa-clock-rotate-left" style="color: var(--info);"></i> Previous Semester Baseline</span>
+                    <strong id="simPrevSemVal" style="color: var(--info);">70%</strong>
+                  </div>
+                  <input type="range" id="simPrevSem" class="sim-slider" min="0" max="100" value="70" />
+                </div>
+              </div>
+
+              <!-- Real-Time Output Simulation Card -->
+              <div class="card-3d holo-card" style="text-align: left; padding: 24px;">
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--accent-cyan); font-weight: 700;">
+                  Live Simulation Result
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 14px; margin: 14px 0;">
+                  <span id="simPredictedScore" style="font-size: 3rem; font-weight: 800; color: #fff;">--%</span>
+                  <span style="color: var(--text-muted); font-size: 0.9rem;">Simulated Outcome</span>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                  <span id="simTierBadge" class="badge badge-medium-tier">Medium Performance</span>
+                  <span id="simRiskBadge" class="badge badge-moderate-risk">Moderate Risk</span>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+                  <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-bottom: 8px;">
+                    Simulated Factor Impacts:
+                  </div>
+                  <div id="simFactorsPreview">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 3 (AI PERSONALIZED IMPROVEMENT SUGGESTIONS) ===== -->
+        <section id="view-suggestions" class="view-section" style="display: none; position: relative;">
+          <!-- Loading Overlay -->
+          <div id="sugLoadingOverlay" style="display: none; position: absolute; inset: 0; background: rgba(10, 14, 26, 0.7); backdrop-filter: blur(6px); z-index: 50; align-items: center; justify-content: center; border-radius: var(--radius-lg);">
+            <div style="text-align: center;">
+              <i class="fas fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--accent-cyan);"></i>
+              <div style="margin-top: 12px; font-weight: 600;">Generating AI Study Roadmaps & Suggestions...</div>
+            </div>
+          </div>
+
+          <!-- Student Select Bar (Faculty view) -->
+          <div id="sugStudentSelectWrapper" class="card-3d" style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding: 16px 20px;">
+            <i class="fas fa-user-gear" style="color: var(--accent-cyan); font-size: 1.2rem;"></i>
+            <span style="font-weight: 600; font-size: 0.9rem;">Select Student Profile:</span>
+            <select id="sugStudentSelect" class="form-select" style="flex: 1; max-width: 420px;" onchange="Module3.handleStudentSelectChange(this.value)">
+              <!-- Populated via JS -->
+            </select>
+          </div>
+
+          <!-- Top Summary Card: Current vs Target Potential -->
+          <div class="card-3d" style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(23, 32, 54, 0.9), rgba(18, 24, 41, 0.8));">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;">
+              <div>
+                <span class="badge badge-low-risk" style="margin-bottom: 6px;"><i class="fas fa-sparkles"></i> AI Remediation Engine</span>
+                <h3 id="sugStudentTitle" style="font-size: 1.35rem; font-weight: 800;">Alex Rivera (2024CS101)</h3>
+                <p id="sugStudentMeta" style="font-size: 0.85rem; color: var(--text-muted);">Computer Science • Year 3 • Sem 5</p>
+              </div>
+
+              <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 10px 18px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                  <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Current Predicted</div>
+                  <div id="sugCurrentScore" style="font-size: 1.5rem; font-weight: 800; color: #fff;">--%</div>
+                </div>
+                <div style="font-size: 1.5rem; color: var(--accent-cyan);"><i class="fas fa-arrow-right"></i></div>
+                <div style="text-align: center; background: rgba(16, 185, 129, 0.1); padding: 10px 18px; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.3);">
+                  <div style="font-size: 0.72rem; color: #34d399; text-transform: uppercase;">Potential Target Score</div>
+                  <div id="sugTargetScore" style="font-size: 1.5rem; font-weight: 800; color: #34d399;">--%</div>
+                </div>
+                <span id="sugPotentialGain" class="badge badge-high-tier" style="font-size: 0.9rem; padding: 6px 14px;">+0.0% Gain</span>
+              </div>
+            </div>
+
+            <!-- Priority Counter Pills -->
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+              <span class="badge badge-critical-risk"><i class="fas fa-triangle-exclamation"></i> <strong id="sugCriticalCount">0</strong> Critical Priority</span>
+              <span class="badge badge-high-risk"><i class="fas fa-circle-exclamation"></i> <strong id="sugHighCount">0</strong> High Priority</span>
+              <span class="badge badge-moderate-risk"><i class="fas fa-circle-info"></i> <strong id="sugMediumCount">0</strong> Medium Priority</span>
+            </div>
+          </div>
+
+          <!-- Attendance Recovery Box (Dynamic) -->
+          <div id="sugAttendanceRecoveryBox">
+            <!-- Rendered if attendance < 75% or < 85% -->
+          </div>
+
+          <!-- Weak Subjects Remediation Cards -->
+          <div class="card-3d" style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700;"><i class="fas fa-triangle-exclamation" style="color: var(--warning);"></i> Subject-Wise Weakness Remediation Plans</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Subjects with scores below the 65% target threshold requiring targeted revision hours.</p>
+              </div>
+            </div>
+            <div id="sugWeakSubjectsList">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- General Academic & Coursework Action Items -->
+          <div class="card-3d" style="margin-bottom: 24px;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 4px;">
+              <i class="fas fa-list-check" style="color: var(--accent-violet);"></i> Continuous Assessment & Internal Strategy
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">Actionable milestones for coursework, lab records, and upcoming examinations.</p>
+            <div id="sugGeneralActionCards">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Faculty Cohort Priority Needs (Admin view only) -->
+          <div id="facultyCohortSuggestionsBox" class="card-3d admin-only" style="display: none;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;">
+              <i class="fas fa-users-viewfinder" style="color: var(--danger);"></i> Cohort Students Requiring Immediate Faculty Intervention
+            </h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">Students flagged with critical priority deficit or attendance detention risks.</p>
+            <div id="cohortCriticalStudentsList">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ===== VIEW: MODULE 4 (PERFORMANCE DASHBOARD & REPORTS) ===== -->
+        <section id="view-reports" class="view-section" style="display: none;">
+          <!-- Top KPI Metrics -->
+          <div class="grid-stats">
+            <div class="card-3d stat-card">
+              <div class="stat-icon primary"><i class="fas fa-user-group"></i></div>
+              <div>
+                <div class="stat-value" id="repTotalStudents">--</div>
+                <div class="stat-label">Total Cohort Roster</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon cyan"><i class="fas fa-chart-line"></i></div>
+              <div>
+                <div class="stat-value" id="repAvgScore">--%</div>
+                <div class="stat-label">Average Expected Score</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon success"><i class="fas fa-bullseye"></i></div>
+              <div>
+                <div class="stat-value" id="repPassRate">--%</div>
+                <div class="stat-label">Forecasted Pass Rate</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon warning"><i class="fas fa-person-chalkboard"></i></div>
+              <div>
+                <div class="stat-value" id="repAvgAttendance">--%</div>
+                <div class="stat-label">Average Attendance</div>
+              </div>
+            </div>
+            <div class="card-3d stat-card">
+              <div class="stat-icon danger"><i class="fas fa-triangle-exclamation"></i></div>
+              <div>
+                <div class="stat-value" id="repCriticalCount">--</div>
+                <div class="stat-label">Critical Risk Cases</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Report Filtering & Download Bar -->
+          <div class="card-3d" style="margin-bottom: 24px; padding: 18px 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <span style="font-weight: 600; font-size: 0.88rem;"><i class="fas fa-filter" style="color: var(--primary);"></i> Filter Reports:</span>
+                <select id="reportFilterDept" class="form-select" style="width: auto;" onchange="Module4.loadAnalytics()">
+                  <option value="all">All Departments</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Electronics & Communication">Electronics & Communication</option>
+                </select>
+                <select id="reportFilterYear" class="form-select" style="width: auto;" onchange="Module4.loadAnalytics()">
+                  <option value="all">All Years</option>
+                  <option value="1">Year 1</option>
+                  <option value="2">Year 2</option>
+                  <option value="3">Year 3</option>
+                  <option value="4">Year 4</option>
+                </select>
+                <select id="reportFilterSem" class="form-select" style="width: auto;" onchange="Module4.loadAnalytics()">
+                  <option value="all">All Semesters</option>
+                  <option value="1">Sem 1</option>
+                  <option value="2">Sem 2</option>
+                  <option value="3">Sem 3</option>
+                  <option value="4">Sem 4</option>
+                  <option value="5">Sem 5</option>
+                  <option value="6">Sem 6</option>
+                  <option value="7">Sem 7</option>
+                  <option value="8">Sem 8</option>
+                </select>
+              </div>
+
+              <div>
+                <button class="btn btn-primary" onclick="Module4.exportCSV()">
+                  <i class="fas fa-file-csv"></i> Export CSV Report
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Analytics Charts Grid -->
+          <div class="grid-2col">
+            <!-- Chart 1: Attendance vs Marks Scatter -->
+            <div class="card-3d">
+              <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">
+                <i class="fas fa-chart-line" style="color: var(--accent-cyan);"></i> Attendance vs Predicted Performance Correlation
+              </h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Shows direct correlation between student attendance rates and expected final scores.</p>
+              <div style="height: 250px; position: relative;">
+                <canvas id="chartAttendanceVsMarks"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 2: Semester-wise Progression -->
+            <div class="card-3d">
+              <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">
+                <i class="fas fa-arrow-trend-up" style="color: var(--primary);"></i> Semester-Wise Performance Progression Trend
+              </h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Longitudinal cohort trajectory across Semesters 1 through 8.</p>
+              <div style="height: 250px; position: relative;">
+                <canvas id="chartSemesterProgression"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 3: Subject-Wise Averages -->
+            <div class="card-3d">
+              <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">
+                <i class="fas fa-chart-column" style="color: var(--accent-violet);"></i> Core Subject Cohort Average Scores
+              </h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Aggregated subject-level benchmark across all enrolled departments.</p>
+              <div style="height: 250px; position: relative;">
+                <canvas id="chartReportSubjectAverages"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 4: Institutional Risk Distribution -->
+            <div class="card-3d">
+              <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">
+                <i class="fas fa-shield-halved" style="color: var(--warning);"></i> Academic Risk Level Breakdown
+              </h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Institution-wide proportion of Low, Moderate, High, and Critical Risk students.</p>
+              <div style="height: 250px; position: relative;">
+                <canvas id="chartReportRiskDoughnut"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comprehensive Student Performance Analytics Roster Table -->
+          <div class="card-3d" style="margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h3 style="font-size: 1.15rem; font-weight: 700;">Institutional Performance & Risk Audit Table</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">Real-time audit log with 1-click official printable academic transcript generation.</p>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reg Number</th>
+                    <th>Student Name</th>
+                    <th>Department</th>
+                    <th>Class</th>
+                    <th>Attendance</th>
+                    <th>Internals</th>
+                    <th>Predicted %</th>
+                    <th>Risk Category</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="reportRosterTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal: Add Student -->
+  <div id="addStudentModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700;"><i class="fas fa-user-plus" style="color: var(--primary);"></i> Register New Student</h3>
+        <button class="btn-close-modal" onclick="App.closeModal('addStudentModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="formAddStudent" onsubmit="Module1.handleAddStudentSubmit(event)">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label">Register Number *</label>
+              <input type="text" id="newRegNo" class="form-input" placeholder="e.g. 2024CS501" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="newFullName" class="form-input" placeholder="e.g. Emily Zhang" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" id="newEmail" class="form-input" placeholder="e.g. emily.cs@edu.ai" required />
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select id="newDept" class="form-select">
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year</label>
+              <select id="newYear" class="form-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <select id="newSem" class="form-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5" selected>5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Number</label>
+            <input type="text" id="newPhone" class="form-input" placeholder="+1 (555) 000-0000" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('addStudentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal: Student Full Profile & History -->
+  <div id="studentProfileModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 760px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 700;"><i class="fas fa-id-badge" style="color: var(--accent-cyan);"></i> Student Academic Profile</h3>
+        <button class="btn-close-modal" onclick="App.closeModal('studentProfileModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: var(--radius-md);">
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Register Number</div>
+            <div id="profileRegNo" style="font-size: 1.1rem; font-weight: 700; color: #fff;">--</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-top: 8px;">Full Name</div>
+            <div id="profileFullName" style="font-size: 1rem; font-weight: 600;">--</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-top: 8px;">Email Address</div>
+            <div id="profileEmail" style="font-size: 0.85rem; color: var(--text-muted);">--</div>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Department</div>
+            <div id="profileDept" style="font-size: 1rem; font-weight: 600;">--</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-top: 8px;">Class Standing</div>
+            <div id="profileYearSem" style="font-size: 0.9rem; color: var(--accent-cyan);">--</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-top: 8px;">Phone Number</div>
+            <div id="profilePhone" style="font-size: 0.85rem; color: var(--text-muted);">--</div>
+          </div>
+        </div>
+
+        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;">Semester Academic Records Log</h4>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sem</th>
+                <th>Attendance</th>
+                <th>Assignment</th>
+                <th>Internals</th>
+                <th>Prior Sem</th>
+                <th>Avg %</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="profileRecordsBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnProfilePredict" class="btn btn-cyan"><i class="fas fa-brain"></i> Generate AI Prediction</button>
+        <button type="button" class="btn btn-secondary" onclick="App.closeModal('studentProfileModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal: Academic Records & Subject Marks CRUD -->
+  <div id="academicRecordModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 720px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 700;"><i class="fas fa-book-open" style="color: var(--primary);"></i> Academic Record & Marks</h3>
+          <div id="recModalStudentName" style="font-size: 0.82rem; color: var(--text-muted);">Student Name</div>
+        </div>
+        <button class="btn-close-modal" onclick="App.closeModal('academicRecordModal')"><i class="fas fa-times"></i></button>
+      </div>
+
+      <form id="formAcademicRecord" onsubmit="Module1.handleSaveAcademicRecord(event)">
+        <input type="hidden" id="recStudentId" />
+        <input type="hidden" id="recRegNo" />
+        <input type="hidden" id="recDept" />
+        <input type="hidden" id="recYear" />
+
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <select id="recSemester" class="form-select">
+                <option value="1">Sem 1</option>
+                <option value="2">Sem 2</option>
+                <option value="3">Sem 3</option>
+                <option value="4">Sem 4</option>
+                <option value="5" selected>Sem 5</option>
+                <option value="6">Sem 6</option>
+                <option value="7">Sem 7</option>
+                <option value="8">Sem 8</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Attendance %</label>
+              <input type="number" id="recAttendance" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assignment Score</label>
+              <input type="number" id="recAssignment" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Internal Marks</label>
+              <input type="number" id="recInternals" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px;">
+            <div class="form-group">
+              <label class="form-label">Previous Semester Score / GPA %</label>
+              <input type="number" id="recPrevSem" class="form-input" min="0" max="100" step="0.5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Faculty Notes / Remarks</label>
+              <input type="text" id="recNotes" class="form-input" placeholder="e.g. Good lab performance" />
+            </div>
+          </div>
+
+          <!-- Subject Marks Dynamic Table -->
+          <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <label class="form-label" style="margin-bottom: 0;">Subject-Wise Marks Breakdown</label>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="Module1.addSubjectRow()">
+                <i class="fas fa-plus"></i> Add Subject
+              </button>
+            </div>
+
+            <div id="subjectMarksList">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="App.closeModal('academicRecordModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Modal: Official Student Academic Transcript & Performance Report -->
+  <div id="transcriptReportModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 820px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.15rem; font-weight: 700;"><i class="fas fa-file-lines" style="color: var(--primary);"></i> Student Academic Transcript & Intelligence Report</h3>
+          <div style="font-size: 0.78rem; color: var(--text-muted);">Official Institutional Predictive Report</div>
+        </div>
+        <button class="btn-close-modal" onclick="App.closeModal('transcriptReportModal')"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="modal-body" id="printableTranscriptArea">
+        <!-- Official Header -->
+        <div style="text-align: center; border-bottom: 2px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 20px;">
+          <h2 style="font-size: 1.3rem; font-weight: 800; color: #fff;">AI INSTITUTE OF TECHNOLOGY & ENGINEERING</h2>
+          <div style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            Official Academic Performance & Predictive Intelligence Transcript
+          </div>
+        </div>
+
+        <!-- Student Meta Details -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: var(--radius-md); margin-bottom: 18px;">
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Student Full Name</div>
+            <div id="transStudentName" style="font-weight: 700; font-size: 1rem; color: #fff;">--</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-top: 6px;">Register Number</div>
+            <div id="transRegNo" style="font-weight: 600;">--</div>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Department & Standing</div>
+            <div id="transDept" style="font-weight: 600;">--</div>
+            <div id="transYearSem" style="font-size: 0.85rem; color: var(--accent-cyan);">--</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-top: 6px;">Contact Email</div>
+            <div id="transEmail" style="font-size: 0.82rem; color: var(--text-muted);">--</div>
+          </div>
+        </div>
+
+        <!-- AI Predictive Metrics Summary -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
+          <div style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); padding: 10px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Predicted Score</div>
+            <div id="transPredScore" style="font-size: 1.25rem; font-weight: 800; color: #fff;">--%</div>
+          </div>
+          <div style="background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.3); padding: 10px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Performance Tier</div>
+            <div id="transPredTier" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan); margin-top: 4px;">--</div>
+          </div>
+          <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 10px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Risk Level</div>
+            <div id="transRiskLevel" style="font-size: 0.85rem; font-weight: 700; color: var(--warning); margin-top: 4px;">--</div>
+          </div>
+          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); padding: 10px; border-radius: var(--radius-sm); text-align: center;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Model Reliability</div>
+            <div id="transConfidence" style="font-size: 0.85rem; font-weight: 700; color: #34d399; margin-top: 4px;">--</div>
+          </div>
+        </div>
+
+        <!-- Historical Semesters Table -->
+        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 8px;">Semester Performance Summary</h4>
+        <div class="table-container" style="margin-bottom: 20px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Semester</th>
+                <th>Attendance %</th>
+                <th>Assignments</th>
+                <th>Internals</th>
+                <th>Prior GPA</th>
+                <th>Semester Avg</th>
+              </tr>
+            </thead>
+            <tbody id="transRecordsTableBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- AI Improvement Action Roadmap for Faculty & Student -->
+        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">Personalized Remediation Strategy</h4>
+        <div style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: var(--radius-md); border-left: 3px solid var(--primary);">
+          <ul id="transSuggestionsList" style="padding-left: 18px; font-size: 0.82rem; color: var(--text-muted);">
+            <!-- Populated via JS -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="App.closeModal('transcriptReportModal')">Close</button>
+        <button type="button" class="btn btn-primary" onclick="Module4.printTranscript()"><i class="fas fa-print"></i> Print / Save as PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- App Core Scripts -->
+  <script src="/static/js/ui_3d.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/module1.js"></script>
+  <script src="/static/js/module2.js"></script>
+  <script src="/static/js/module3.js"></script>
+  <script src="/static/js/module4.js"></script>
+
+  <script>
+    function toggleAuthTab(tab) {
+      if (tab === 'login') {
+        document.getElementById('formLogin').style.display = 'block';
+        document.getElementById('formRegister').style.display = 'none';
+        document.getElementById('tabBtnLogin').className = 'btn btn-primary';
+        document.getElementById('tabBtnRegister').className = 'btn btn-secondary';
+      } else {
+        document.getElementById('formLogin').style.display = 'none';
+        document.getElementById('formRegister').style.display = 'block';
+        document.getElementById('tabBtnLogin').className = 'btn btn-secondary';
+        document.getElementById('tabBtnRegister').className = 'btn btn-primary';
+      }
+    }
+
+    function toggleRegStudentFields(role) {
+      document.getElementById('regStudentFields').style.display = (role === 'student') ? 'block' : 'none';
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPassword').value;
+      App.login(email, pass);
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      const payload = {
+        full_name: document.getElementById('regFullName').value,
+        email: document.getElementById('regEmail').value,
+        role: document.getElementById('regRole').value,
+        register_number: document.getElementById('regRegNo')?.value,
+        year: document.getElementById('regYear')?.value,
+        semester: document.getElementById('regSemester')?.value,
+        department: document.getElementById('regDept').value,
+        password: document.getElementById('regPassword').value
+      };
+      App.register(payload);
+    }
+  </script>
+</body>
+</html>
